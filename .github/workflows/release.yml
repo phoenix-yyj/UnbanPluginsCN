@@ -20,18 +20,25 @@ jobs:
         uses: actions/setup-dotnet@v2
         with:
           dotnet-version: "8.0.x"
-
+      - name: Set System Locale
+        run: |
+          chcp 65001
+          [System.Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+        shell: pwsh
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build --configuration Release --no-restore /p:UseUTF8CharSet=true
 
       - name: Publish
         run: dotnet publish --configuration Release --no-build --output ./output
 
       - name: Zip Output
-        run: Compress-Archive -Path ./output/* -DestinationPath ./UnbanPluginsCN.zip
+        run: |
+          $OutputEncoding = [System.Text.Encoding]::UTF8
+          [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+          Compress-Archive -Path ./output/* -DestinationPath ./UnbanPluginsCN.zip -Force
         shell: pwsh
 
       - name: Release
