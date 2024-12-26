@@ -34,23 +34,7 @@ jobs:
         run: Compress-Archive -Path ./output/* -DestinationPath ./UnbanPluginsCN.zip
         shell: pwsh
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Release
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./UnbanPluginsCN.zip
-          asset_name: UnbanPluginsCN.zip
-          asset_content_type: application/zip
+          files: UnbanPluginsCN.zip
