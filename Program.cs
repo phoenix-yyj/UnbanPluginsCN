@@ -1,4 +1,4 @@
-// See https://aka.ms/new-console-template for more information
+ï»¿// See https://aka.ms/new-console-template for more information
 using System.Diagnostics;
 
 namespace UnbanPluginsCN;
@@ -36,14 +36,14 @@ class Program
         {
             Log($"Error reading file: {ex.Message}");
 
-            // Ñ¯ÎÊÓÃ»§ÊÇ·ñÑ¡ÔñÎÄ¼ş¼ĞÂ·¾¶
-            var result = MessageBox.Show("Î´ÕÒµ½ÅäÖÃÎÄ¼ş£¬ÊÇ·ñÑ¡ÔñÎÄ¼ş¼ĞÂ·¾¶£¿\nÑ¡\"ÊÇ\"Ôò»áµ¯³öÂ·¾¶Ñ¡Ôñ,Ä¬ÈÏÉèÖÃÎª\n%AppData%\\XIVLauncherCN\\dalamudAssets\nÒ»°ãÇé¿öÏÂÖ±½Óµã»÷\"Ñ¡ÔñÎÄ¼ş¼Ğ\"¼´¿É.", "ÌáÊ¾", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            // è¯¢é—®ç”¨æˆ·æ˜¯å¦é€‰æ‹©æ–‡ä»¶å¤¹è·¯å¾„
+            var result = MessageBox.Show("æœªæ‰¾åˆ°é…ç½®æ–‡ä»¶ï¼Œæ˜¯å¦é€‰æ‹©æ–‡ä»¶å¤¹è·¯å¾„ï¼Ÿ\né€‰\"æ˜¯\"åˆ™ä¼šå¼¹å‡ºè·¯å¾„é€‰æ‹©,é»˜è®¤è®¾ç½®ä¸º\n%AppData%\\XIVLauncherCN\\dalamudAssets\nä¸€èˆ¬æƒ…å†µä¸‹ç›´æ¥ç‚¹å‡»\"é€‰æ‹©æ–‡ä»¶å¤¹\"å³å¯.", "æç¤º", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (result == DialogResult.Yes)
             {
                 using var folderDialog = new FolderBrowserDialog();
-                folderDialog.Description = "ÇëÑ¡ÔñÅäÖÃÎÄ¼ş¼ĞÂ·¾¶";
+                folderDialog.Description = "è¯·é€‰æ‹©é…ç½®æ–‡ä»¶å¤¹è·¯å¾„";
 
-                // ÉèÖÃÄ¬ÈÏÂ·¾¶Îª %AppData%\XIVLauncherCN\dalamudAssets
+                // è®¾ç½®é»˜è®¤è·¯å¾„ä¸º %AppData%\XIVLauncherCN\dalamudAssets
                 string defaultPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "XIVLauncherCN", "dalamudAssets");
                 folderDialog.InitialDirectory = defaultPath;
 
@@ -55,22 +55,22 @@ class Program
                     try
                     {
                         File.WriteAllText(filePath, fileContent);
-                        Log($"ÄÚÈİÒÑ³É¹¦Ğ´ÈëÎÄ¼ş: {filePath}");
+                        Log($"å†…å®¹å·²æˆåŠŸå†™å…¥æ–‡ä»¶: {filePath}");
                     }
                     catch (Exception writeError)
                     {
-                        Log($"Ğ´ÈëÎÄ¼şÊ±·¢Éú´íÎó: {writeError.Message}");
+                        Log($"å†™å…¥æ–‡ä»¶æ—¶å‘ç”Ÿé”™è¯¯: {writeError.Message}");
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Î´Ñ¡ÔñÎÄ¼ş¼Ğ£¬³ÌĞò½«ÍË³ö", "´íÎó", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("æœªé€‰æ‹©æ–‡ä»¶å¤¹ï¼Œç¨‹åºå°†é€€å‡º", "é”™è¯¯", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Environment.Exit(-1);
                 }
             }
             else
             {
-                MessageBox.Show("Î´Ñ¡ÔñÎÄ¼ş¼Ğ£¬³ÌĞò½«ÍË³ö", "´íÎó", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("æœªé€‰æ‹©æ–‡ä»¶å¤¹ï¼Œç¨‹åºå°†é€€å‡º", "é”™è¯¯", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Environment.Exit(-1);
             }
         }
