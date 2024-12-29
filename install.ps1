@@ -1,41 +1,39 @@
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-# 添加以下代码到脚本开头
+# Check if running as administrator
 if (-NOT ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] "Administrator"))  
 {  
     $arguments = "& '" + $myinvocation.mycommand.definition + "'"
     Start-Process powershell -Verb runAs -ArgumentList $arguments
     exit
 }
-# 获取当前用户
+# Get current user
 $currentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-# 设置执行策略
+# Set execution policy
 Set-ExecutionPolicy Bypass -Scope Process -Force
 
-
-# 设置工作目录为脚本所在位置
+# Set working directory to script location
 $workDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $exePath = "`"" + (Join-Path $workDir "UnbanPluginsCN.exe") + "`""
 
-# 创建任务动作
+# Create task action
 $Action = New-ScheduledTaskAction -Execute $exePath -WorkingDirectory $workDir
 
-# 创建登录触发器 - 所有用户
+# Create logon trigger for all users
 $Trigger = New-ScheduledTaskTrigger -AtLogOn -RandomDelay (New-TimeSpan -Minutes 1)
 
-# 设置运行权限 - 系统管理员
+# Set run level to highest
 $Principal = New-ScheduledTaskPrincipal -UserId $currentUser `
     -LogonType ServiceAccount `
     -RunLevel Highest
 
-
-# 配置任务设置
+# Configure task settings
 $Settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries `
     -DontStopIfGoingOnBatteries `
     -ExecutionTimeLimit (New-TimeSpan -Hours 72) `
     -MultipleInstances IgnoreNew `
     -Priority 7
     
-# 注册计划任务并捕获结果
+# Register scheduled task and capture result
 try {
     $result = Register-ScheduledTask -TaskName "UnbanCNplugins-service" `
         -TaskPath "\" `
@@ -47,17 +45,17 @@ try {
         -Force
 
     if ($result) {
-        Write-Host "计划任务创建成功!" -ForegroundColor Green
-        Write-Host "任务信息:"
-        Write-Host "- 名称: $($result.TaskName)"
-        Write-Host "- 状态: $($result.State)"
-        Write-Host "- 下次运行时间: $($result.NextRunTime)"
+        Write-Host "Scheduled task created successfully!" -ForegroundColor Green
+        Write-Host "Task information:"
+        Write-Host "- Name: $($result.TaskName)"
+        Write-Host "- State: $($result.State)"
+        Write-Host "- Next Run Time: $($result.NextRunTime)"
     }
 } catch {
-    Write-Host "创建计划任务时出错:" -ForegroundColor Red
+    Write-Host "Error creating scheduled task:" -ForegroundColor Red
     Write-Host $_.Exception.Message
 }
 
-# 暂停让用户查看结果
-Write-Host "`n按任意键继续..." -ForegroundColor Yellow
+# Pause to allow user to view results
+Write-Host "`nPress any key to continue..." -ForegroundColor Yellow
 $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
